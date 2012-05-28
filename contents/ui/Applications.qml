@@ -1,10 +1,8 @@
-import QtQuick 1.1;
-import org.kde.plasma.core 0.1 as PlasmaCore;
-import org.kde.plasma.components 0.1 as Plasma;
-import org.kde.plasma.graphicswidgets 0.1 as PlasmaWidgets;
-import org.kde.qtextracomponents 0.1 as QtExtra;
+import QtQuick 1.1
+import org.kde.plasma.core 0.1 as PlasmaCore
+import org.kde.plasma.components 0.1 as Plasma
+import org.kde.plasma.graphicswidgets 0.1 as PlasmaWidgets
 
-//import "plasmapackage:/code/apps.js" as Apps
 import "../code/apps.js" as Apps
 
 Item {
@@ -126,7 +124,6 @@ Item {
 			connectedSources = sources;
 			
 			categorizeAppsTimer.start();
-			//getMenuItems(appSearchQuery);
 		}
 	}
 	
@@ -164,6 +161,9 @@ Item {
 				onClicked: {
 					var executablePath = modelData.entryPath.replace(/^.*[\\\/]/, '').replace(/.desktop/, '');
 					executableSource.connectSource(executablePath);
+					
+					// hide dashboard
+					toggleLauncher();
 				}
 			}
 		}

@@ -73,7 +73,7 @@ Item {
 						// hide dashboard
 						toggleLauncher();
 						
-						// launch app
+						// activate client
 						workspace.activeClient = windowThumbs.get(index).client;
 					};
 					
@@ -93,6 +93,16 @@ Item {
 		
 	}
     
+    // check if the client should be visible in the windowSwitcher
+    function visibleClient(client) {
+		if(client.dock || client.skipSwitcher || client.skipTaskbar) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+    
+    // get clients from KWin and add to model
     Component.onCompleted: {
 		
 		// add data to model
@@ -101,7 +111,7 @@ Item {
 		var i = 0;
 		for (i = 0; i < clients.length; i++) {
 			
-			if(!clients[i].dock && !clients[i].skipSwitcher) {
+			if(visibleClient(clients[i])) {
 				
 				windowThumbs.append({
 					"windowId": clients[i].windowId,
@@ -131,13 +141,14 @@ Item {
 		
     }
     
+    // adding and removing clients
     Connections {
         target: workspace
         
 		// connections for when clients are added and removed
 		onClientAdded: {
 			
-			if(!client.dock && !client.skipSwitcher) {
+			if(visibleClient(client)) {
 			
 				windowThumbs.append({
 					"windowId": client.windowId,
@@ -171,7 +182,7 @@ Item {
 		}
     }
     
-    // thumb resizer
+    // thumb resizer "thread"
     Timer {
 		id: fitCellSize
 		interval: 150
@@ -200,8 +211,7 @@ Item {
 			}
 			
 		}
-     }
-
+	}
     
 	// recalculate cell size
     function recalculateCellSize() {

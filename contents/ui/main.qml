@@ -435,14 +435,5 @@ Item {
 			showDesktop = true;
 		}
 	}
-	
-    Connections {
-        target: workspace
-
-        onCurrentDesktopChanged: {
-            launcher.visible = false;
-            dashboardContent.visible = false;
-        }
-    }
     
 }

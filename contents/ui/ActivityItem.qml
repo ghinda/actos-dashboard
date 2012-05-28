@@ -185,15 +185,16 @@ Component {
 				
 				var operation;
 				
-				if(!model.State != 'Running') {
+				if(model.State != 'Running') {
 					operation = activitiesSource.serviceForSource(DataEngineSource).operationDescription('start');
 					activitiesSource.serviceForSource(DataEngineSource).startOperationCall(operation);
-				}
-				
-				if(!Current) {
+				} else if(!Current) {
 					operation = activitiesSource.serviceForSource(DataEngineSource).operationDescription('setCurrent');
 					activitiesSource.serviceForSource(DataEngineSource).startOperationCall(operation);
 				}
+				
+				// hide dashboard
+				toggleLauncher();
 				
 			}
 		}
