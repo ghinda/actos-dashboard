@@ -262,7 +262,6 @@ Item {
 		MouseArea {
 			anchors.fill: searchField
 			onClicked: {
-				dashboardContent.forceActiveFocus();
 				searchField.forceActiveFocus();
 				console.log('click-textarea');
 			}
@@ -347,23 +346,35 @@ Item {
 
 	PlasmaCore.Dialog {
         id: dashboardContent
+        x: hideContentX
         windowFlags: Qt.X11BypassWindowManagerHint
         
         mainItem: viewsContainer
         
 		Behavior on x {
-			PropertyAnimation { properties: "x"; easing.type: Easing.InOutQuad }
+			id: contentTransition
+			PropertyAnimation {
+				properties: "x"
+				easing.type: Easing.InOutQuad
+			}
+			enabled: false
 		}
 	}
 	
 	PlasmaCore.Dialog {
         id: launcher
+        x: hideLauncherX
         windowFlags: Qt.X11BypassWindowManagerHint
         
         mainItem: dashboardCategoriesContainer
 		
 		Behavior on x {
-			PropertyAnimation { properties: "x"; easing.type: Easing.InOutQuad }
+			id: launcherTransition
+			PropertyAnimation {
+				properties: "x"
+				easing.type: Easing.InOutQuad
+			}
+			enabled: false
 		}
 	}
 	
@@ -373,13 +384,14 @@ Item {
         dashboard.screenWidth = screen.width;
         dashboard.screenHeight = screen.height;
 		
-		dashboardContent.visible = true;
 		dashboardContent.x = hideContentX;
-		
-		launcher.visible = true;
 		launcher.x = hideLauncherX;
-		
 		dashboardContent.y = launcher.y = 20;
+		
+		dashboardContent.visible = true;
+		launcher.visible = true;
+		
+		contentTransition.enabled = launcherTransition.enabled = true;
 		
 		// register left screen edge
 		registerScreenEdge(KWin.ElectricLeft, function() {
