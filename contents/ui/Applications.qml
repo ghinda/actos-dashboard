@@ -163,7 +163,7 @@ Item {
 					executableSource.connectSource(executablePath);
 					
 					// hide dashboard
-					toggleLauncher();
+					//toggleLauncher();
 				}
 			}
 		}

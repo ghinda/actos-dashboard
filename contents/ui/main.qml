@@ -343,7 +343,7 @@ Item {
 			}
 		}
 	}
-
+	
 	PlasmaCore.Dialog {
         id: dashboardContent
         x: hideContentX
@@ -405,6 +405,9 @@ Item {
 		
     }
     
+    // TODO CHECK IF EVERYTHING IS MINIMIZED
+    // DACA MINIMIZEZ CU BUTONU DREAPTA SUS, CAND CE DESCHID DASHBOARDU E AIUREA
+    
     function toggleLauncher() {
 		if(launcher.x == showLauncherX) {
 			launcher.x = hideLauncherX;
@@ -415,6 +418,7 @@ Item {
 				
 				// show previous apps - unminimize everything
 				workspace.slotToggleShowDesktop();
+				
 				showDesktop = false;
 			}
 			
@@ -445,6 +449,23 @@ Item {
 			// show desktop - minimize everything
 			workspace.slotToggleShowDesktop();
 			showDesktop = true;
+		}
+	}
+	
+	Connections {
+		target: workspace
+		
+		onClientAdded: {
+			// hide dashboard when adding a new client (popup-plasmoids, windows, apps, etc.)
+			if(launcher.x == showLauncherX) toggleLauncher();
+		}
+		
+		onClientActivated: {
+			// hide dashboard when activating a new "normalWindow" client
+			if(client && client.normalWindow && launcher.x == showLauncherX) {
+				launcher.x = hideLauncherX;
+				dashboardCategories.currentIndex = -1;
+			}
 		}
 	}
     

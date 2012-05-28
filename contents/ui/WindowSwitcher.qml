@@ -1,9 +1,8 @@
-import QtQuick 1.1;
-import org.kde.plasma.core 0.1 as PlasmaCore;
-import org.kde.plasma.components 0.1 as Plasma;
-import org.kde.plasma.graphicswidgets 0.1 as PlasmaWidgets;
-import org.kde.qtextracomponents 0.1 as QtExtra;
-import org.kde.kwin 0.1 as KWin;
+import QtQuick 1.1
+import org.kde.plasma.core 0.1 as PlasmaCore
+import org.kde.plasma.components 0.1 as Plasma
+import org.kde.plasma.graphicswidgets 0.1 as PlasmaWidgets
+import org.kde.kwin 0.1 as KWin
 
 Item {
 	anchors.fill: parent
@@ -71,7 +70,10 @@ Item {
 					
 					if(clickTimer < 270 && !mouseMoved) {
 						// hide dashboard
-						toggleLauncher();
+						//toggleLauncher();
+						
+						// unminimize everything
+						workspace.slotToggleShowDesktop();
 						
 						// activate client
 						workspace.activeClient = windowThumbs.get(index).client;

@@ -188,7 +188,9 @@ Component {
 				if(model.State != 'Running') {
 					operation = activitiesSource.serviceForSource(DataEngineSource).operationDescription('start');
 					activitiesSource.serviceForSource(DataEngineSource).startOperationCall(operation);
-				} else if(!Current) {
+				}
+				
+				if(!Current) {
 					operation = activitiesSource.serviceForSource(DataEngineSource).operationDescription('setCurrent');
 					activitiesSource.serviceForSource(DataEngineSource).startOperationCall(operation);
 				}
