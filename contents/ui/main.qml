@@ -26,7 +26,7 @@ Item {
 	property int runningActivities : 0
 	property variant stateSource
 	
-	property variant showDesktop : false
+	property bool showDesktop : false
 	
 	// category button component
 	Component {
@@ -405,8 +405,7 @@ Item {
 		
     }
     
-    // TODO CHECK IF EVERYTHING IS MINIMIZED
-    // DACA MINIMIZEZ CU BUTONU DREAPTA SUS, CAND CE DESCHID DASHBOARDU E AIUREA
+    // TODO Fix issues with opening apps from dashboard, then opening dashboard again
     
     function toggleLauncher() {
 		if(launcher.x == showLauncherX) {
@@ -435,9 +434,12 @@ Item {
 				// show content
 				dashboardCategories.currentIndex = 0;
 				
-				// show desktop - minimize everything
-				workspace.slotToggleShowDesktop();
-				showDesktop = true;
+				// check if there are any normalWindows active/everything is not minimized already
+				if(workspace.activeClient && workspace.activeClient.normalWindow) {
+					// show desktop - minimize everything
+					workspace.slotToggleShowDesktop();
+					showDesktop = true;
+				}
 			}
 		} else {
 			// show launcher
@@ -446,9 +448,12 @@ Item {
 			// show content
 			dashboardCategories.currentIndex = 0;
 			
-			// show desktop - minimize everything
-			workspace.slotToggleShowDesktop();
-			showDesktop = true;
+			// check if there are any normalWindows active/everything is not minimized already
+			if(workspace.activeClient && workspace.activeClient.normalWindow) {
+				// show desktop - minimize everything
+				workspace.slotToggleShowDesktop();
+				showDesktop = true;
+			}
 		}
 	}
 	

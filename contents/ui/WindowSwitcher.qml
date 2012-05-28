@@ -97,7 +97,7 @@ Item {
     
     // check if the client should be visible in the windowSwitcher
     function visibleClient(client) {
-		if(client.dock || client.skipSwitcher || client.skipTaskbar) {
+		if(client.dock || client.skipSwitcher || client.skipTaskbar || !client.normalWindow) {
 			return false;
 		} else {
 			return true;
