@@ -161,6 +161,8 @@ Item {
 				onClicked: {
 					var executablePath = modelData.entryPath.replace(/^.*[\\\/]/, '').replace(/.desktop/, '');
 					executableSource.connectSource(executablePath);
+					// allow multiple execution
+					executableSource.removeSource(executablePath);
 					
 					// hide dashboard
 					//toggleLauncher();
