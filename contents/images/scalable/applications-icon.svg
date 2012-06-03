@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="128"
+   height="128"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.48.3.1 r9886"
+   sodipodi:docname="applications-icon.svg"
+   inkscape:export-filename="/home/mokush/.project-neon-kde/share/apps/kwin/scripts/arctos-dashboard/contents/images/applicationsIcon.png"
+   inkscape:export-xdpi="45"
+   inkscape:export-ydpi="45">
+  <defs
+     id="defs4" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#000000"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.57254902"
+     inkscape:pageshadow="2"
+     inkscape:zoom="2.8284271"
+     inkscape:cx="79.529175"
+     inkscape:cy="61.468009"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="true"
+     inkscape:window-width="1280"
+     inkscape:window-height="735"
+     inkscape:window-x="0"
+     inkscape:window-y="22"
+     inkscape:window-maximized="1"
+     showguides="true"
+     inkscape:guide-bbox="true">
+    <inkscape:grid
+       type="xygrid"
+       id="grid3006"
+       empspacing="5"
+       visible="true"
+       enabled="true"
+       snapvisiblegridlinesonly="true" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-924.36218)">
+    <path
+       style="fill:#1a1a1a;fill-opacity:1;stroke:none"
+       d="m -178,947.36216 0,75.00004 128,0 0,-75.00004 -128,0 z m 64,22.5 15,6 0,18 -15,6.00002 -15,-6.00002 0,-18 15,-6 z"
+       id="rect3827"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:#1a1a1a;fill-opacity:1;stroke:none"
+       d="m -178,936.36216 0,5 0,5 128,0 -2,-5 -94,0 -2,-5 -30,0 z"
+       id="rect3829"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:#ffffff;fill-opacity:1;stroke:none"
+       d="m 17,932.36218 0,115.00002 25,0 0,-10 -13,0 0,-1 13,0 0,-14 -13,0 0,-1 13,0 0,-14 -13,0 0,-1 13,0 0,-14.00002 -13,0 0,-1 13,0 0,-14 -13,0 0,-1 13,0 0,-14 -13,0 0,-1 13,0 0,-14 -13,0 0,-1 13,0 0,-14 -25,0 z"
+       id="rect3007"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/home/mokush/.project-neon-kde/share/apps/kwin/scripts/arctos-dashboard/contents/images/scalable/g3782.png"
+       inkscape:export-xdpi="45"
+       inkscape:export-ydpi="45" />
+    <g
+       id="g3831"
+       transform="translate(4.5045738,1.30758)"
+       style="fill:#ffffff"
+       inkscape:export-filename="/home/mokush/.project-neon-kde/share/apps/kwin/scripts/arctos-dashboard/contents/images/scalable/g3782.png"
+       inkscape:export-xdpi="45"
+       inkscape:export-ydpi="45">
+      <path
+         inkscape:connector-curvature="0"
+         id="path2990"
+         d="m 64.495427,958.05464 -10,17 20,0 z"
+         style="fill:#ffffff;fill-opacity:1;stroke:none" />
+      <rect
+         y="978.05463"
+         x="54.495426"
+         height="60"
+         width="20"
+         id="rect3760"
+         style="fill:#ffffff;fill-opacity:1;stroke:none" />
+      <path
+         sodipodi:nodetypes="csssscc"
+         inkscape:connector-curvature="0"
+         id="rect3762"
+         d="m 74.495427,1041.0546 0,4 c 0,0.554 -0.446,1 -1,1 l -18,0 c -0.554,0 -1,-0.446 -1,-1 l 0,-4 z"
+         style="fill:#ffffff;fill-opacity:1;stroke:none" />
+    </g>
+    <g
+       id="g3782"
+       transform="translate(22.707885,2.8e-4)"
+       style="fill:#ffffff"
+       inkscape:export-xdpi="45"
+       inkscape:export-ydpi="45">
+      <path
+         id="path3766"
+         d="m 75,981.93931 c 3.517842,3.80649 9.217978,3.79932 12.729201,0 3.517842,-3.80649 3.517842,-9.96716 0,-13.77364 l -0.01222,-0.0131 c -4.705225,-5.09134 -6.246986,-12.30102 -4.642597,-18.79722 l -0.04379,0.007 c -2.939936,0.85395 -5.718466,2.52829 -8.030599,5.03013 -7.030082,7.60691 -7.030082,19.94038 0,27.54728 l 0,0 z"
+         style="fill:#ffffff;fill-opacity:1"
+         inkscape:connector-curvature="0" />
+      <path
+         id="path3768"
+         d="m 81.364601,1047.3622 c 4.972535,0 9.000054,-4.358 9.000054,-9.7385 l 0,-52.08205 c -5.562661,3.47703 -12.443558,3.48364 -18.006218,-0.007 l 0.0056,52.08805 c 5.09e-4,5.3811 4.028028,9.7392 9.000563,9.7392 z"
+         style="fill:#ffffff;fill-opacity:1"
+         inkscape:connector-curvature="0" />
+    </g>
+  </g>
+</svg>
