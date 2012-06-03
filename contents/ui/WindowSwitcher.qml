@@ -28,7 +28,7 @@ Item {
 		height: parent.height
 		
 		cellWidth: cellSize
-		cellHeight: cellSize
+		cellHeight: cellSize + 30
 		
 		model: windowThumbs
 		delegate: WindowThumbItem { }

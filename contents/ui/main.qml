@@ -379,10 +379,10 @@ Item {
 	}
 	
 	Component.onCompleted: {
-		
-		var screen = workspace.clientArea(KWin.FullScreenArea, workspace.activeScreen, workspace.currentDesktop);
-        dashboard.screenWidth = screen.width;
-        dashboard.screenHeight = screen.height;
+
+		var screen = workspace.clientArea(KWin.MaximizedArea, workspace.activeScreen, workspace.currentDesktop);
+        screenWidth = screen.width;
+        screenHeight = screen.height;
 		
 		dashboardContent.x = hideContentX;
 		launcher.x = hideLauncherX;

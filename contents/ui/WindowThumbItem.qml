@@ -5,12 +5,14 @@ import org.kde.plasma.graphicswidgets 0.1 as PlasmaWidgets
 import org.kde.kwin 0.1 as KWin
  
 Component {
-	
+
 	Item {
+		property real ratio : client.width / client.height
+		property int maxWidth : (item.height - topControls.height - 5) * ratio
+		property int maxHeight : item.height - topControls.height - 5
+	
 		property real mX
 		property real mY
-		
-		property real ratio : (client.width / client.height)
 		
 		id: main
         width: grid.cellWidth
@@ -53,10 +55,12 @@ Component {
 				
 				Plasma.Label {
 					text: client.caption
-					elide: Text.ElideRight
-					width: 90
+					elide: Text.ElideLeft
+					horizontalAlignment: Text.AlignRight
 					anchors {
 						verticalCenter: parent.verticalCenter
+						left: closeWindow.right
+						leftMargin: 5
 						right: appIcon.left
 						rightMargin: 5
 					}
@@ -98,8 +102,8 @@ Component {
 					verticalCenter: item.verticalCenter
 					horizontalCenter: item.horizontalCenter
 				}
-				width: (client.width < client.height) ? item.height * ratio - 60 * ratio : item.width
-				height: (client.width < client.height) ? item.height - 60 : item.width / ratio
+				width: (client.width < client.height) ? maxWidth : item.width
+				height: (client.width < client.height) ? maxHeight : item.width / ratio
 				parentWindow: dashboardContent.windowId
 				clip: false
 				wId: windowId
@@ -139,7 +143,7 @@ Component {
             transitions: Transition {
 				NumberAnimation {
 					property: "width"
-					duration: 100
+					duration: 200
 				}
 			}
 			
