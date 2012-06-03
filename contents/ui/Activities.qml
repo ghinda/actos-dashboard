@@ -23,8 +23,6 @@ Item {
 		delegate: ActivityItem {}
 	}
 	
-	
-	
 	Plasma.ScrollBar {
 		anchors {
 			top: activitiesGrid.top
