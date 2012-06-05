@@ -26,8 +26,6 @@ Item {
 	property int runningActivities : 0
 	property variant stateSource
 	
-	property bool showDesktop : false
-	
 	// category button component
 	Component {
 		id: dashboardCategoryButton
@@ -95,10 +93,9 @@ Item {
 					// activate button
 					dashboardCategories.currentIndex = index;
 					
-					if(!showDesktop) {
+					if(workspace.activeClient && workspace.activeClient.normalWindow) {
 						// show desktop - minimize everything
 						workspace.slotToggleShowDesktop();
-						showDesktop = true;
 					}
 					
 				}
@@ -417,8 +414,6 @@ Item {
 				
 				// show previous apps - unminimize everything
 				workspace.slotToggleShowDesktop();
-				
-				showDesktop = false;
 			}
 			
 		} else {
@@ -438,7 +433,6 @@ Item {
 				if(workspace.activeClient && workspace.activeClient.normalWindow) {
 					// show desktop - minimize everything
 					workspace.slotToggleShowDesktop();
-					showDesktop = true;
 				}
 			}
 		} else {
@@ -452,7 +446,6 @@ Item {
 			if(workspace.activeClient && workspace.activeClient.normalWindow) {
 				// show desktop - minimize everything
 				workspace.slotToggleShowDesktop();
-				showDesktop = true;
 			}
 		}
 	}
