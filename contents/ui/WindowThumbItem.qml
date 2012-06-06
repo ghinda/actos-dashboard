@@ -9,7 +9,7 @@ Component {
 	Item {
 		property real ratio : client.width / client.height
 		property int maxWidth : (item.height - topControls.height - 5) * ratio
-		property int maxHeight : item.height - topControls.height - 5
+		property int maxHeight : (item.height - topControls.height - 5) - 30
 	
 		property real mX
 		property real mY
@@ -103,7 +103,7 @@ Component {
 					horizontalCenter: item.horizontalCenter
 				}
 				width: (client.width < client.height) ? maxWidth : item.width
-				height: (client.width < client.height) ? maxHeight : item.width / ratio
+				height: (client.width < client.height) ? maxHeight : item.width / ratio - 30
 				parentWindow: dashboardContent.windowId
 				clip: false
 				wId: windowId

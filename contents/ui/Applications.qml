@@ -165,7 +165,7 @@ Item {
 					executableSource.removeSource(executablePath);
 					
 					// hide dashboard
-					//toggleLauncher();
+					toggleLauncher();
 				}
 			}
 		}
