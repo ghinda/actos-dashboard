@@ -1,15 +1,19 @@
 import QtQuick 1.1
 import org.kde.plasma.core 0.1 as PlasmaCore
 import org.kde.plasma.components 0.1 as Plasma
-import org.kde.plasma.graphicswidgets 0.1 as PlasmaWidgets
+import org.kde.qtextracomponents 0.1 as QtExtra
 import org.kde.kwin 0.1 as KWin
  
 Component {
 
 	Item {
-		property real ratio : client.width / client.height
-		property int maxWidth : (item.height - topControls.height - 5) * ratio
-		property int maxHeight : (item.height - topControls.height - 5) - 30
+		property int clientWidth: client.width
+		property int clientHeight: client.height
+		
+		property real ratio : clientWidth / clientHeight
+		
+		property int maxWidth : item.height * ratio
+		property int maxHeight : item.height
 	
 		property real mX
 		property real mY
@@ -21,21 +25,23 @@ Component {
         Item {
             id: item
             parent: loc
-            x: main.x + 5
-            y: main.y + 5
-            width: main.width - 10
-			height: main.height - 10
+            x: main.x
+            y: main.y
+            
+            width: main.width - 10 // 5px margin l/r
+			height: main.height - topControls.height - 5 // 5px margin from top controls to top thumb
             
             // Top controls
 			PlasmaCore.FrameSvgItem {
 				id: topControls
-				z: 2
 				height: 32
 				opacity: 0
 				imagePath: 'widgets/frame'
 				prefix: 'plain'
+				z: 3
 				
 				anchors {
+					topMargin: 40
 					left: thumb.left
 					right: thumb.right
 					bottom: thumb.top
@@ -66,16 +72,17 @@ Component {
 					}
 				}
 				
-				PlasmaWidgets.IconWidget {
+				QtExtra.QIconItem {
 					id: appIcon
+					width: 22
+					height: 22
 					icon: QIcon(client.icon)
-					preferredIconSize: "22x22"
-					minimumIconSize: "16x16"
-					drawBackground: true
 					
 					anchors {
 						top: parent.top
+						topMargin: 5
 						right: parent.right
+						rightMargin: 5
 					}
 				}
 				
@@ -94,20 +101,17 @@ Component {
 			
 			}
             
-            // TODO Fix issues when height>width (like konsole), with unreachable close button
-            
             KWin.ThumbnailItem {
 				id: thumb
 				anchors {
 					verticalCenter: item.verticalCenter
 					horizontalCenter: item.horizontalCenter
 				}
-				width: (client.width < client.height) ? maxWidth : item.width
-				height: (client.width < client.height) ? maxHeight : item.width / ratio - 30
+				width: (clientWidth < clientHeight) ? maxWidth : item.width
+				height: (clientWidth < clientHeight) ? maxHeight : item.width / ratio
 				parentWindow: dashboardContent.windowId
 				clip: false
 				wId: windowId
-				z: 1
 			}
             
             Behavior on x {
@@ -143,12 +147,18 @@ Component {
             transitions: Transition {
 				NumberAnimation {
 					property: "width"
-					duration: 200
+					duration: 100
 				}
 			}
 			
 			MouseArea {
-				anchors.fill: item
+				height: thumb.height + 30
+				z: 2
+				anchors {
+					left: thumb.left
+					right: thumb.right
+					bottom: thumb.bottom
+				}
 				hoverEnabled: true
 				onEntered: {
 					topControls.state = 'show';
@@ -181,6 +191,14 @@ Component {
 			
         }
         
-        
+        Connections {
+			target: client
+			
+			onGeometryChanged: {
+				clientHeight = client.height;
+				clientWidth = client.width;
+			}
+		}
+		
     }
 }

@@ -9,9 +9,9 @@ Item {
 	width: 500
 	height: 300
 	property int screenWidth: 0
-    property int screenHeight: 0
+	property int screenHeight: 0
     
-    property int launcherWidth: 130
+	property int launcherWidth: 130
     
 	property int hideContentX: screenWidth - (screenWidth * 2) - 10
 	property int showContentX: 0

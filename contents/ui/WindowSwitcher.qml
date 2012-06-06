@@ -31,7 +31,7 @@ Item {
 		cellHeight: cellSize
 		
 		model: windowThumbs
-		delegate: WindowThumbItem { }
+		delegate: WindowThumbItem {}
 		
 		MouseArea {
 			property int currentId: -1                       // Original position in model
