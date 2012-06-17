@@ -33,6 +33,7 @@ Item {
 						source: sources[i],
 						name: entry["name"],
 						genericName: entry["genericName"],
+						menuId: entry["menuId"],
 						iconName: entry["iconName"],
 						entryPath: entry["entryPath"]
 					};
@@ -62,6 +63,7 @@ Item {
 							genericName: entry["genericName"],
 							iconName: entry["iconName"],
 							entryPath: entry["entryPath"],
+							menuId: entry["menuId"],
 							apps: []
 						};
 					
@@ -85,7 +87,9 @@ Item {
 			i = 0;
 			
 			if(categoryIndex == appCategories.count) {
+				Apps.allApps.sort(sortByName);
 				appGrid.model = Apps.allApps;
+				
 				categoriesList.model = Apps.categoryNames;
 				
 				return false;
@@ -103,6 +107,18 @@ Item {
 			return true;
 		}
 		
+	}
+	
+	function sortByName(a, b) {
+		var nameA = a.name.toLowerCase(),
+			nameB = b.name.toLowerCase();
+			
+		if (nameA < nameB) //sort string ascending
+			return -1 
+		if (nameA > nameB)
+			return 1
+		
+		return 0 //default return value (no sorting)
 	}
 	
 	ListModel {
@@ -152,17 +168,15 @@ Item {
 			PlasmaWidgets.IconWidget {
 				text: modelData.name
 				icon: QIcon(modelData.iconName)
-				preferredIconSize: "64x64"
-				minimumIconSize: "64x64"
+				preferredIconSize: "48x48"
+				minimumIconSize: "48x48"
 				drawBackground: true
 				
 				anchors.fill: parent
 				
 				onClicked: {
-					var executablePath = modelData.entryPath.replace(/^.*[\\\/]/, '').replace(/.desktop/, '');
-					executableSource.connectSource(executablePath);
-					// allow multiple execution
-					executableSource.removeSource(executablePath);
+					var operation = appsSource.serviceForSource(modelData.menuId).operationDescription("launch");
+					appsSource.serviceForSource(modelData.menuId).startOperationCall(operation);
 					
 					// hide dashboard
 					toggleLauncher();
@@ -177,7 +191,7 @@ Item {
 		Plasma.ToolButton {
 			width: 150
 			text: modelData.name
-			iconSource: 'plasmapackage:/images/blank.png' // use blank icon to left-align text
+			iconSource: "plasmapackage:/images/blank.png" // use blank icon to left-align text
 			
 			onClicked: {
 				
@@ -200,8 +214,8 @@ Item {
 			rightMargin: 20
 		}
 		
-		cellWidth: 150
-		cellHeight: 150
+		cellWidth: 170
+		cellHeight: 170
 		delegate: appItem
 	}
 	

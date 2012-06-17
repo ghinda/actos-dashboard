@@ -28,14 +28,13 @@ Component {
             x: main.x
             y: main.y
             
-            width: main.width - 10 // 5px margin l/r
-			height: main.height - topControls.height - 5 // 5px margin from top controls to top thumb
+            width: main.width - 20 // 5px margin l/r
+			height: main.height - topControls.height - 10 // 5px margin from top controls to top thumb
             
             // Top controls
 			PlasmaCore.FrameSvgItem {
 				id: topControls
 				height: 32
-				opacity: 0
 				imagePath: 'widgets/frame'
 				prefix: 'plain'
 				z: 3
@@ -50,12 +49,24 @@ Component {
 				ConfigIcon {
 					id: closeWindow
 					svgElementId: 'close'
-					
+					opacity: 0
 					anchors.left: parent.left
 					
 					onClicked: {
 						// close window
 						client.closeWindow();
+					}
+					
+					states: State {
+						name: 'show'
+						PropertyChanges {
+							target: closeWindow
+							opacity: 1
+						}
+					}
+
+					transitions: Transition {
+						PropertyAnimation { property: "opacity"; duration: 100 }
 					}
 				}
 				
@@ -63,15 +74,17 @@ Component {
 					text: client.caption
 					elide: Text.ElideLeft
 					horizontalAlignment: Text.AlignRight
+					opacity: 0.8
 					anchors {
 						verticalCenter: parent.verticalCenter
 						left: closeWindow.right
 						leftMargin: 5
-						right: appIcon.left
-						rightMargin: 5
+						right: parent.right
+						rightMargin: 10
 					}
 				}
 				
+				/*
 				QtExtra.QIconItem {
 					id: appIcon
 					width: 22
@@ -93,11 +106,7 @@ Component {
 						opacity: 1
 					}
 				}
-
-				transitions: Transition {
-					PropertyAnimation { property: "opacity"; duration: 100 }
-					PropertyAnimation { property: "y"; duration: 100 }
-				}
+				*/
 			
 			}
             
@@ -142,6 +151,11 @@ Component {
 					y: mY - height / 2;
 					z: 10
 				}
+				
+				PropertyChanges {
+					target: topControls
+					opacity: 0
+				}
             }
             
             transitions: Transition {
@@ -161,10 +175,12 @@ Component {
 				}
 				hoverEnabled: true
 				onEntered: {
-					topControls.state = 'show';
+					//topControls.state = 'show';
+					closeWindow.state = 'show';
 				}
 				onExited: {
-					topControls.state = '';
+					//topControls.state = '';
+					closeWindow.state = '';
 				}
 				onPressed: {
 

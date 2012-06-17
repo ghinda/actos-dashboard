@@ -10,8 +10,10 @@ Item {
 	height: 300
 	property int screenWidth: 0
 	property int screenHeight: 0
+	property int dashHeight: 0
     
 	property int launcherWidth: 130
+	property int dockHeight: 40
     
 	property int hideContentX: screenWidth - (screenWidth * 2) - 10
 	property int showContentX: 0
@@ -24,6 +26,7 @@ Item {
 	property int mininumStringLength : 3
 	
 	property int runningActivities : 0
+	property string currentActivity : ''
 	property variant stateSource
 	
 	// category button component
@@ -111,6 +114,7 @@ Item {
 		
 	}
 	
+	// categories model
 	ListModel {
 		id: dashboardCategoriesModel
 		
@@ -132,10 +136,11 @@ Item {
 
 	}
 
+	// dashboard categories
 	Item {
 		id: dashboardCategoriesContainer
 		width: launcherWidth
-		height: screenHeight
+		height: (dashboardContent.x == showContentX) ? dashHeight : screenHeight
 		
 		ListView {
 			id: dashboardCategories
@@ -144,8 +149,8 @@ Item {
 			spacing: 20
 			anchors {
 				top: parent.top
+				topMargin: 200
 				bottom: parent.bottom
-				centerIn: parent
 			}
 			currentIndex: -1
 			
@@ -175,47 +180,11 @@ Item {
 	
 	}
 	
-	PlasmaCore.DataSource {
-		id: activitiesSource
-		dataEngine: "org.kde.activities"
-
-		onSourceAdded: {
-			connectSource(source);
-			runningActivities++;
-		}
-		
-		onSourceRemoved: {
-			runningActivities--;
-		}
-		
-		Component.onCompleted: {
-			stateSource = sources[sources.length - 1];
-			connectedSources = sources;
-			
-			runningActivities = activitiesSource.data[stateSource].Running.length;
-			
-			// connect signal after connecting sources
-			activitiesSource.dataChanged.connect(function() {
-				runningActivities = activitiesSource.data[stateSource].Running.length;
-			})
-			
-		}
-	}
-	
-	PlasmaCore.DataSource {
-		id: executableSource
-		dataEngine: "executable"
-	}
-	
-	PlasmaCore.DataModel {
-		id: activitiesModel
-		dataSource: activitiesSource
-    }
-	
+	// dashboard views
 	Item {
 		id: viewsContainer
 		width: screenWidth
-		height: screenHeight
+		height: dashHeight
 		
 		Plasma.TextField {
 			id: searchField
@@ -358,6 +327,7 @@ Item {
 		}
 	}
 	
+	// dashboard launcher/categories
 	PlasmaCore.Dialog {
         id: launcher
         x: hideLauncherX
@@ -375,11 +345,54 @@ Item {
 		}
 	}
 	
+	// dashboard button
+	PlasmaCore.Dialog {
+        id: dashboardButton
+        x: 0
+        y: 0
+        windowFlags: Qt.X11BypassWindowManagerHint
+        
+        mainItem: dashboardButttonContainer
+	}
+	
+	Item {
+		id: dashboardButttonContainer
+		width: 25
+		height: 18
+		
+		Plasma.ToolButton {
+			anchors.fill: parent
+			
+			onClicked: toggleBoth()
+			
+			Image {
+				id: dashboardIcon
+				width: 15
+				height: 15
+				source: "../images/dashboardIcon.png"
+				
+				anchors {
+					left: parent.left
+					leftMargin: 5
+				}
+				
+				opacity: (dashboardContent.x == showContentX) ? 1 : 0.5
+				
+				transitions: Transition {
+					PropertyAnimation { property: "opacity"; duration: 100 }
+				}
+			}
+		}
+	}
+	
+	
 	Component.onCompleted: {
 
 		var screen = workspace.clientArea(KWin.MaximizedArea, workspace.activeScreen, workspace.currentDesktop);
         screenWidth = screen.width;
         screenHeight = screen.height;
+		
+		dashHeight = screenHeight - dockHeight;
 		
 		dashboardContent.x = hideContentX;
 		launcher.x = hideLauncherX;
@@ -389,6 +402,9 @@ Item {
 		launcher.visible = true;
 		
 		contentTransition.enabled = launcherTransition.enabled = true;
+		
+		
+		dashboardButton.visible = true;
 		
 		// register left screen edge
 		registerScreenEdge(KWin.ElectricLeft, function() {
@@ -402,8 +418,83 @@ Item {
 		
     }
     
-    // TODO Fix issues with opening apps from dashboard, then opening dashboard again
+	// activities source
+	PlasmaCore.DataSource {
+		id: activitiesSource
+		dataEngine: "org.kde.activities"
+
+		onSourceAdded: {
+			connectSource(source);
+			runningActivities++;
+		}
+		
+		onSourceRemoved: {
+			runningActivities--;
+		}
+		
+		Component.onCompleted: {
+			stateSource = sources[sources.length - 1];
+			connectedSources = sources;
+			
+			runningActivities = activitiesSource.data[stateSource].Running.length;
+			
+			// connect signal after connecting sources
+			activitiesSource.dataChanged.connect(function() {
+				runningActivities = activitiesSource.data[stateSource].Running.length;
+				
+				currentActivity = activitiesSource.data[stateSource].Current;
+				
+				// get new windows for activity
+				
+				// when changed activity, get new windows
+				windowThumbs.clear();
+				
+				// add new clients to model
+				var clients = workspace.clientList();
+				
+				var i = 0;
+				for (i = 0; i < clients.length; i++) {
+					
+					if(visibleClient(clients[i])) {
+						
+						// match activity
+						if(clients[i].activities == "" || clients[i].activities == currentActivity) {
+							
+							windowThumbs.append({
+								"windowId": clients[i].windowId,
+								"gridId": windowThumbs.count,
+								"client": clients[i]
+							});
+						
+						};
+						
+					}
+					
+				}
+				
+				// recalculate thumb size
+				windowsView.recalculateCellSize();
+				
+			})
+			
+		}
+	}
+	
+	PlasmaCore.DataSource {
+		id: executableSource
+		dataEngine: "executable"
+	}
+	
+	ListModel {
+		id: windowThumbs
+	}
+	
+	PlasmaCore.DataModel {
+		id: activitiesModel
+		dataSource: activitiesSource
+    }
     
+    // toggle dashboard categories
     function toggleLauncher() {
 		if(launcher.x == showLauncherX) {
 			launcher.x = hideLauncherX;
@@ -421,6 +512,7 @@ Item {
 		}
 	}
 	
+	// toggle complete dashboard
 	function toggleBoth() {
 		if(launcher.x == showLauncherX) {
 			if(dashboardCategories.currentIndex != -1) {
@@ -450,6 +542,16 @@ Item {
 		}
 	}
 	
+	// check if the client/window should be visible in the windowSwitcher
+    function visibleClient(client) {
+		if(client.dock || client.skipSwitcher || client.skipTaskbar || !client.normalWindow) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+	
+	// add and remove clients when added/removed
 	Connections {
 		target: workspace
 		
