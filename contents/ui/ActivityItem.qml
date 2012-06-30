@@ -170,7 +170,7 @@ Component {
 					if(source.slice( -3 ) != 'jpg') {
 						wallpaper.source = source.slice(0, -3) + 'jpg';
 					} else {
-						wallpaper.source = 'plasmapackage:/images/defaultWallpaper.png';
+						wallpaper.source = '../images/defaultWallpaper.png';
 					}
 				}
 				

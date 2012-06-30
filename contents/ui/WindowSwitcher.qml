@@ -150,6 +150,13 @@ Item {
 			// recalculate thumb size
 			recalculateCellSize();
 			
+			// hide search button
+			if(windowThumbs.count) {
+				if(dashboardCategories.contentItem.children[1].state == "hide") {
+					dashboardCategories.contentItem.children[1].state = "active";
+				}
+			}
+			
 		}
 		
 		onClientRemoved: {
@@ -159,6 +166,12 @@ Item {
 				
 				if(windowThumbs.get(i).client == client) {
 					windowThumbs.remove(i);
+					
+					// hide windows button
+					if(!windowThumbs.count) {
+						dashboardCategories.currentIndex = 1;
+						dashboardCategories.contentItem.children[1].state = "hide";
+					}
 					
 					// recalculate thumb size
 					recalculateCellSize();

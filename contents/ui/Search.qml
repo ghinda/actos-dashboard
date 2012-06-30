@@ -10,6 +10,9 @@ Item {
 
 	property int activitySearchIndex : 0
 	
+	property alias appResultsGrid : appResultsGrid
+	property alias appsRunnerModel : appsRunnerModel
+	
 	/* UI */
 	
 	Component {

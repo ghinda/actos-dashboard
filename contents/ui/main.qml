@@ -14,11 +14,6 @@ Item {
     
 	property int launcherWidth: 130
 	property int dockHeight: 40
-    
-	property int hideContentX: screenWidth - (screenWidth * 2) - 10
-	property int showContentX: 0
-	property int hideLauncherX: -200
-	property int showLauncherX: 0
 	
 	property int previousIndex : 0
 	
@@ -92,15 +87,8 @@ Item {
 				}
 				
 				onClicked: {
-				
 					// activate button
 					dashboardCategories.currentIndex = index;
-					
-					if(workspace.activeClient && workspace.activeClient.normalWindow) {
-						// show desktop - minimize everything
-						workspace.slotToggleShowDesktop();
-					}
-					
 				}
 			}
 			
@@ -136,60 +124,18 @@ Item {
 
 	}
 
-	// dashboard categories
-	Item {
-		id: dashboardCategoriesContainer
-		width: launcherWidth
-		height: (dashboardContent.x == showContentX) ? dashHeight : screenHeight
-		
-		ListView {
-			id: dashboardCategories
-			width: parent.width
-			height: 320
-			spacing: 20
-			anchors {
-				top: parent.top
-				topMargin: 200
-				bottom: parent.bottom
-			}
-			currentIndex: -1
-			
-			model: dashboardCategoriesModel
-			delegate: dashboardCategoryButton
-			
-			highlight: Rectangle {
-				width: 3
-				opacity: 0.8
-				color: "white"
-			}
-			
-			// show content dialog when anything selected
-			states: [
-				State {
-					name: "showContentDialog"
-					when: dashboardCategories.currentIndex != -1
-					
-					PropertyChanges {
-						target: dashboardContent
-						x: showContentX
-					}
-				}
-				
-			]
-		}
-	
-	}
-	
 	// dashboard views
 	Item {
 		id: viewsContainer
 		width: screenWidth
 		height: dashHeight
+		focus: true
 		
-		Plasma.TextField {
+		PlasmaWidgets.LineEdit {
 			id: searchField
-			placeholderText: 'Search..'
+			text: ""
 			width: 190
+			z: 9
 			anchors {
 				top: parent.top
 				topMargin: 20
@@ -220,17 +166,66 @@ Item {
 					
 				};
 				
-				
 			}
-
+			
 		}
 		
-		MouseArea {
-			anchors.fill: searchField
-			onClicked: {
-				searchField.forceActiveFocus();
-				console.log('click-textarea');
+		Keys.onPressed: {
+			if(event.key == Qt.Key_Backspace) {
+				// delete last char
+				searchField.text = searchField.text.substring(0, searchField.text.length - 1);
+			} else if(event.key == Qt.Key_Down) {
+				// focus app results
+				searchView.appResultsGrid.focus = true;
+			} else if(event.key == Qt.Key_Enter || event.key == Qt.Key_Return) {
+				
+				// if appresultgrid not focused, run first app
+				if(!searchView.appResultsGrid.focus) {
+					// run first app result
+					searchView.runApp(0, 0);
+				}
+				
+			} else {
+				// add text to textfield
+				searchField.text += event.text;
 			}
+			
+		}
+		
+		// dashboard categories
+		Item {
+			id: dashboardCategoriesContainer
+			width: launcherWidth
+			anchors {
+				top: parent.top
+				left: parent.left
+				bottom: parent.bottom
+			}
+			
+			ListView {
+				id: dashboardCategories
+				width: parent.width
+				height: 320
+				spacing: 20
+				interactive: false
+				anchors {
+					left: parent.left
+					right: parent.right
+					verticalCenter: parent.verticalCenter
+				}
+				currentIndex: 0
+				
+				model: dashboardCategoriesModel
+				delegate: dashboardCategoryButton
+				
+				highlight: Rectangle {
+					width: 3
+					opacity: 0.8
+					color: "white"
+				}
+
+			}
+		
 		}
 		
 		Item {
@@ -239,8 +234,8 @@ Item {
 			anchors {
 				top: searchField.bottom
 				topMargin: 50
-				left: parent.left
-				leftMargin: 200
+				left: dashboardCategoriesContainer.right
+				leftMargin: 50
 				right: parent.right
 				rightMargin: 10
 				bottom: parent.bottom
@@ -312,37 +307,11 @@ Item {
 	
 	PlasmaCore.Dialog {
         id: dashboardContent
-        x: hideContentX
-        windowFlags: Qt.X11BypassWindowManagerHint
+        x: 0
+        windowFlags: Qt.Popup
+        visible: false
         
         mainItem: viewsContainer
-        
-		Behavior on x {
-			id: contentTransition
-			PropertyAnimation {
-				properties: "x"
-				easing.type: Easing.InOutQuad
-			}
-			enabled: false
-		}
-	}
-	
-	// dashboard launcher/categories
-	PlasmaCore.Dialog {
-        id: launcher
-        x: hideLauncherX
-        windowFlags: Qt.X11BypassWindowManagerHint
-        
-        mainItem: dashboardCategoriesContainer
-		
-		Behavior on x {
-			id: launcherTransition
-			PropertyAnimation {
-				properties: "x"
-				easing.type: Easing.InOutQuad
-			}
-			enabled: false
-		}
 	}
 	
 	// dashboard button
@@ -376,7 +345,7 @@ Item {
 					leftMargin: 5
 				}
 				
-				opacity: (dashboardContent.x == showContentX) ? 1 : 0.5
+				opacity: (dashboardContent.visible) ? 1 : 0.5
 				
 				transitions: Transition {
 					PropertyAnimation { property: "opacity"; duration: 100 }
@@ -394,22 +363,9 @@ Item {
 		
 		dashHeight = screenHeight - dockHeight;
 		
-		dashboardContent.x = hideContentX;
-		launcher.x = hideLauncherX;
-		dashboardContent.y = launcher.y = 20;
-		
-		dashboardContent.visible = true;
-		launcher.visible = true;
-		
-		contentTransition.enabled = launcherTransition.enabled = true;
-		
-		
+		dashboardContent.y = 20;
+		dashboardContent.visible = false;
 		dashboardButton.visible = true;
-		
-		// register left screen edge
-		registerScreenEdge(KWin.ElectricLeft, function() {
-			toggleLauncher();
-		});
 		
 		// register top-left screen edge
 		registerScreenEdge(KWin.ElectricTopLeft, function() {
@@ -493,46 +449,33 @@ Item {
 		id: activitiesModel
 		dataSource: activitiesSource
     }
-    
-    // toggle dashboard categories
-    function toggleLauncher() {
-		if(launcher.x == showLauncherX) {
-			launcher.x = hideLauncherX;
-			
-			if(dashboardCategories.currentIndex != -1) {
-				// hide content
-				dashboardCategories.currentIndex = -1;
-				
-				// show previous apps - unminimize everything
-				workspace.slotToggleShowDesktop();
-			}
-			
-		} else {
-			launcher.x = showLauncherX;
-		}
-	}
 	
 	// toggle complete dashboard
 	function toggleBoth() {
-		if(launcher.x == showLauncherX) {
-			if(dashboardCategories.currentIndex != -1) {
-				toggleLauncher();
-			} else {
-				// show content
-				dashboardCategories.currentIndex = 0;
-				
-				// check if there are any normalWindows active/everything is not minimized already
-				if(workspace.activeClient && workspace.activeClient.normalWindow) {
-					// show desktop - minimize everything
-					workspace.slotToggleShowDesktop();
-				}
-			}
-		} else {
-			// show launcher
-			toggleLauncher();
+		
+		if(dashboardContent.visible == true) {
 			
+			dashboardContent.visible = false;
+			
+			workspace.slotToggleShowDesktop();
+			
+		} else {
+			
+			// clear search field
+			searchField.text = "";
 			// show content
-			dashboardCategories.currentIndex = 0;
+			dashboardContent.visible = true;
+			if(windowThumbs.count) {
+				dashboardCategories.currentIndex = 0;
+			} else {
+				dashboardCategories.currentIndex = 1;
+			}
+			
+			// Activate Window and text field
+			dashboardContent.activateWindow();
+			
+			// Activate Window and text field
+			viewsContainer.forceActiveFocus();
 			
 			// check if there are any normalWindows active/everything is not minimized already
 			if(workspace.activeClient && workspace.activeClient.normalWindow) {
@@ -540,6 +483,7 @@ Item {
 				workspace.slotToggleShowDesktop();
 			}
 		}
+	
 	}
 	
 	// check if the client/window should be visible in the windowSwitcher
@@ -548,24 +492,6 @@ Item {
 			return false;
 		} else {
 			return true;
-		}
-	}
-	
-	// add and remove clients when added/removed
-	Connections {
-		target: workspace
-		
-		onClientAdded: {
-			// hide dashboard when adding a new client (popup-plasmoids, windows, apps, etc.)
-			if(launcher.x == showLauncherX) toggleLauncher();
-		}
-		
-		onClientActivated: {
-			// hide dashboard when activating a new "normalWindow" client
-			if(client && client.normalWindow && launcher.x == showLauncherX) {
-				launcher.x = hideLauncherX;
-				dashboardCategories.currentIndex = -1;
-			}
 		}
 	}
     
