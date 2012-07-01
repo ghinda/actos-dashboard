@@ -179,9 +179,9 @@ Item {
 				// focus app results
 				searchView.appResultsGrid.focus = true;
 			} else if(event.key == Qt.Key_Enter || event.key == Qt.Key_Return) {
-				
+			
 				// if appresultgrid not focused, run first app
-				if(!searchView.appResultsGrid.focus) {
+				if(!searchView.appResultsGrid.focus && searchField.text) {
 					// run first app result
 					searchView.runApp(0, 0);
 				}
