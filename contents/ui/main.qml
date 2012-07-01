@@ -13,7 +13,7 @@ Item {
 	property int dashHeight: 0
     
 	property int launcherWidth: 130
-	property int dockHeight: 50
+	property int dockHeight: 40
 	
 	property int previousIndex : 0
 	
