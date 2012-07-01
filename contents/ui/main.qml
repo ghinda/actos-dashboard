@@ -445,6 +445,21 @@ rm -f "$js"\n\
 				
 				runningActivities = activitiesSource.data[stateSource].Running.length;
 				
+				// get new wallpapers
+				for(var i=0; i < activitiesModel.count; i++) {
+					
+					for(var j=0; j < activitiesSource.connectedSources.length; j++) {
+					
+						if(activitiesModel.get(i).DataEngineSource == activitiesSource.connectedSources[j]) {
+							
+							activitiesModel.get(i).Icon = activitiesSource.data[activitiesSource.connectedSources[j]].Icon;
+							
+						}
+						
+					}
+					
+				}
+				
 				if(currentActivity != activitiesSource.data[stateSource].Current) {
 					currentActivity = activitiesSource.data[stateSource].Current;
 					
