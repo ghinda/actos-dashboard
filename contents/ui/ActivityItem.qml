@@ -50,6 +50,8 @@ Component {
 					// stop activity
 					var operation = activitiesSource.serviceForSource(DataEngineSource).operationDescription('stop');
 					activitiesSource.serviceForSource(DataEngineSource).startOperationCall(operation);
+					
+					activitiesModel.setProperty(index, "State", "Stopped");
 				}
 				
 			}
@@ -135,6 +137,20 @@ Component {
 			
 		}
 		
+		Rectangle {
+			width: wallpaper.width + 2
+			height: wallpaper.height + 2
+			anchors {
+				left: wallpaper.left
+				leftMargin: -1
+				top: wallpaper.top
+				topMargin:  -1
+			}
+			color: "white"
+			opacity: 0.7
+			visible: (model.State == 'Running' && Current == true)
+		}
+		
 		// Wallpaper
 		Image {
 			id: wallpaper
@@ -143,16 +159,17 @@ Component {
 			fillMode: Image.PreserveAspectCrop
 			smooth: true
 			clip: true
-			opacity: 0.7
-			source: Icon || ''
+			opacity: (model.State == 'Running' && Current == true) ? 1 : 0.5
+			source: Icon || '../images/defaultWallpaper.png'
 			
 			anchors {
 				top: parent.top
 				topMargin: editControls.height
 			}
-			
+
 			states: State {
 				name: 'highlight'
+				
 				PropertyChanges {
 					target: wallpaper
 					opacity: 1
@@ -173,8 +190,8 @@ Component {
 						wallpaper.source = '../images/defaultWallpaper.png';
 					}
 				}
-				
 			}
+			
 		}
 		
 		// Wallpaper MouseArea
@@ -188,15 +205,27 @@ Component {
 				if(model.State != 'Running') {
 					operation = activitiesSource.serviceForSource(DataEngineSource).operationDescription('start');
 					activitiesSource.serviceForSource(DataEngineSource).startOperationCall(operation);
+					
+					activitiesModel.setProperty(index, "State", "Running");
 				}
 				
 				if(!Current) {
 					operation = activitiesSource.serviceForSource(DataEngineSource).operationDescription('setCurrent');
 					activitiesSource.serviceForSource(DataEngineSource).startOperationCall(operation);
+					
+					// set previous to false
+					for(var i = 0; i < activitiesModel.count; i++) {
+						if(activitiesModel.get(i).Current == true) {
+							activitiesModel.setProperty(i, "Current", false);
+						}
+					}
+					
+					// set current to true
+					activitiesModel.setProperty(index, "Current", true);
 				}
 				
 				// hide dashboard
-				toggleLauncher();
+				toggleBoth();
 				
 			}
 		}
@@ -352,9 +381,8 @@ Component {
 				// create new activity
 				var operation = activitiesSource.serviceForSource(DataEngineSource).operationDescription('add');
 				operation.Name = 'New Activity';
-				
 				activitiesSource.serviceForSource(DataEngineSource).startOperationCall(operation);
-				
+
 			}
 		}
 		

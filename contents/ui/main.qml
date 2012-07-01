@@ -13,7 +13,7 @@ Item {
 	property int dashHeight: 0
     
 	property int launcherWidth: 130
-	property int dockHeight: 40
+	property int dockHeight: 50
 	
 	property int previousIndex : 0
 	
@@ -130,6 +130,7 @@ Item {
 		width: screenWidth
 		height: dashHeight
 		focus: true
+		anchors.rightMargin: 20
 		
 		PlasmaWidgets.LineEdit {
 			id: searchField
@@ -210,6 +211,7 @@ Item {
 				interactive: false
 				anchors {
 					left: parent.left
+					leftMargin: 3
 					right: parent.right
 					verticalCenter: parent.verticalCenter
 				}
@@ -237,7 +239,7 @@ Item {
 				left: dashboardCategoriesContainer.right
 				leftMargin: 50
 				right: parent.right
-				rightMargin: 10
+				rightMargin: 30
 				bottom: parent.bottom
 			}
 			
@@ -305,6 +307,7 @@ Item {
 		}
 	}
 	
+	// dashboard content
 	PlasmaCore.Dialog {
         id: dashboardContent
         x: 0
@@ -326,8 +329,8 @@ Item {
 	
 	Item {
 		id: dashboardButttonContainer
-		width: 25
-		height: 18
+		width: 28
+		height: 20
 		
 		Plasma.ToolButton {
 			anchors.fill: parent
@@ -353,26 +356,19 @@ Item {
 			}
 		}
 	}
-	
-	
-	Component.onCompleted: {
-
-		var screen = workspace.clientArea(KWin.MaximizedArea, workspace.activeScreen, workspace.currentDesktop);
-        screenWidth = screen.width;
-        screenHeight = screen.height;
-		
-		dashHeight = screenHeight - dockHeight;
-		
-		dashboardContent.y = 20;
-		dashboardContent.visible = false;
-		dashboardButton.visible = true;
-		
-		// register top-left screen edge
-		registerScreenEdge(KWin.ElectricTopLeft, function() {
-			toggleBoth();
-		});
-		
-    }
+    
+    Timer {
+		id: removeCashew
+		repeat: false
+		interval: 200
+		triggeredOnStart: false
+		onTriggered: {
+			
+			// remove the cashew
+			executableSource.connectSource("sh ~/remove-cashew.sh " + new Date().getTime());
+			
+		}
+	}
     
 	// activities source
 	PlasmaCore.DataSource {
@@ -382,10 +378,41 @@ Item {
 		onSourceAdded: {
 			connectSource(source);
 			runningActivities++;
+			
+			// add to model
+			var sourceData = activitiesSource.data[source];
+			sourceData.DataEngineSource = source;
+			
+			activitiesModel.insert(activitiesModel.count - 1, sourceData);
+			
+			// set current
+			var currentOperation = activitiesSource.serviceForSource(source).operationDescription('setCurrent');
+			activitiesSource.serviceForSource(source).startOperationCall(currentOperation);
+			
+			// set previous to false
+			for(var i = 0; i < activitiesModel.count; i++) {
+				if(activitiesModel.get(i).Current == true) {
+					activitiesModel.setProperty(i, "Current", false);
+				}
+			}
+			
+			// set current to true
+			activitiesModel.setProperty(index, "Current", true);
+			
+			// remove cashew
+			removeCashew.start();
 		}
 		
 		onSourceRemoved: {
+			disconnectSource(source);
 			runningActivities--;
+			
+			// remove from model
+			for(var i = 0; i < activitiesModel.count; i++) {
+				if(source == activitiesModel.get(i).DataEngineSource) {
+					activitiesModel.remove(i);
+				}
+			}
 		}
 		
 		Component.onCompleted: {
@@ -394,8 +421,17 @@ Item {
 			
 			runningActivities = activitiesSource.data[stateSource].Running.length;
 			
+			
+			for(var i=0; i < sources.length; i++) {
+				var sourceData = activitiesSource.data[sources[i]];
+				sourceData.DataEngineSource = sources[i];
+				
+				activitiesModel.append(sourceData);
+			}
+			
 			// connect signal after connecting sources
 			activitiesSource.dataChanged.connect(function() {
+				
 				runningActivities = activitiesSource.data[stateSource].Running.length;
 				
 				currentActivity = activitiesSource.data[stateSource].Current;
@@ -445,16 +481,22 @@ Item {
 		id: windowThumbs
 	}
 	
+	ListModel {
+		id: activitiesModel
+	}
+	
+	/*
 	PlasmaCore.DataModel {
 		id: activitiesModel
 		dataSource: activitiesSource
     }
+    */
 	
 	// toggle complete dashboard
 	function toggleBoth() {
 		
 		if(dashboardContent.visible == true) {
-			
+
 			dashboardContent.visible = false;
 			
 			workspace.slotToggleShowDesktop();
@@ -465,6 +507,7 @@ Item {
 			searchField.text = "";
 			// show content
 			dashboardContent.visible = true;
+			
 			if(windowThumbs.count) {
 				dashboardCategories.currentIndex = 0;
 			} else {
@@ -494,5 +537,30 @@ Item {
 			return true;
 		}
 	}
+	
+	Component.onCompleted: {
+
+		var screen = workspace.clientArea(KWin.MaximizedArea, workspace.activeScreen, workspace.currentDesktop);
+        screenWidth = screen.width;
+        screenHeight = screen.height;
+		
+		dashHeight = screenHeight - dockHeight;
+		
+		dashboardContent.y = 22;
+		dashboardContent.x = 0;
+		dashboardContent.visible = false;
+	
+		dashboardButton.visible = true;
+		
+		// register top-left screen edge
+		registerScreenEdge(KWin.ElectricTopLeft, function() {
+			toggleBoth();
+		});
+		
+		// register dashboard shortcut
+		registerShortcut("Activate Actos Dashboard", "", "Meta+A", function() {
+			toggleBoth();
+		});
+    }
     
 }

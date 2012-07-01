@@ -10,6 +10,7 @@ Item {
 		anchors {
 			top: parent.top
 			left: parent.left
+			leftMargin: 1
 			bottom: parent.bottom
 			right: parent.right
 		}

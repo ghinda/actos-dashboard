@@ -115,7 +115,9 @@ Item {
 		// recalculate thumb size
 		recalculateCellSize();
 		
+		
 		// Meta + Digit global shortcuts to each window
+		/*
 		var i = 0;
 		for (i = 1; i < 10; i++) {
 			// self-invoking closure
@@ -127,6 +129,7 @@ Item {
 				});
 			})();
 		}
+		*/
 		
     }
     
