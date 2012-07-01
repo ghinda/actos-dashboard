@@ -364,8 +364,19 @@ Item {
 		triggeredOnStart: false
 		onTriggered: {
 			
+			var cashewRemoveScript = '#!/bin/sh\n\
+js=$(mktemp)\n\
+cat > $js <<_EOF\n\
+var activity = new Activity("desktop");\n\
+activity.addWidget("py-cashew");\n\
+_EOF\n\
+qdbus org.kde.plasma-desktop /App local.PlasmaApp.loadScriptInInteractiveConsole "$js" > /dev/null\n\
+xdotool search --name "Desktop Shell Scripting Console – Plasma Desktop Shell" windowactivate key ctrl+e key ctrl+w\n\
+rm -f "$js"\n\
+#' + new Date().getTime();
+			
 			// remove the cashew
-			executableSource.connectSource("sh ~/remove-cashew.sh " + new Date().getTime());
+			executableSource.connectSource(cashewRemoveScript);
 			
 		}
 	}
@@ -389,6 +400,9 @@ Item {
 			var currentOperation = activitiesSource.serviceForSource(source).operationDescription('setCurrent');
 			activitiesSource.serviceForSource(source).startOperationCall(currentOperation);
 			
+			// remove cashew
+			removeCashew.start();
+			
 			// set previous to false
 			for(var i = 0; i < activitiesModel.count; i++) {
 				if(activitiesModel.get(i).Current == true) {
@@ -397,10 +411,8 @@ Item {
 			}
 			
 			// set current to true
-			activitiesModel.setProperty(index, "Current", true);
+			activitiesModel.setProperty(activitiesModel.count - 2, "Current", true);
 			
-			// remove cashew
-			removeCashew.start();
 		}
 		
 		onSourceRemoved: {
@@ -421,7 +433,6 @@ Item {
 			
 			runningActivities = activitiesSource.data[stateSource].Running.length;
 			
-			
 			for(var i=0; i < sources.length; i++) {
 				var sourceData = activitiesSource.data[sources[i]];
 				sourceData.DataEngineSource = sources[i];
@@ -434,38 +445,40 @@ Item {
 				
 				runningActivities = activitiesSource.data[stateSource].Running.length;
 				
-				currentActivity = activitiesSource.data[stateSource].Current;
-				
-				// get new windows for activity
-				
-				// when changed activity, get new windows
-				windowThumbs.clear();
-				
-				// add new clients to model
-				var clients = workspace.clientList();
-				
-				var i = 0;
-				for (i = 0; i < clients.length; i++) {
+				if(currentActivity != activitiesSource.data[stateSource].Current) {
+					currentActivity = activitiesSource.data[stateSource].Current;
 					
-					if(visibleClient(clients[i])) {
+					// get new windows for activity
+					
+					// when changed activity, get new windows
+					windowThumbs.clear();
+					
+					// add new clients to model
+					var clients = workspace.clientList();
+					
+					var i = 0;
+					for (i = 0; i < clients.length; i++) {
 						
-						// match activity
-						if(clients[i].activities == "" || clients[i].activities == currentActivity) {
+						if(visibleClient(clients[i])) {
 							
-							windowThumbs.append({
-								"windowId": clients[i].windowId,
-								"gridId": windowThumbs.count,
-								"client": clients[i]
-							});
-						
-						};
+							// match activity
+							if(clients[i].activities == "" || clients[i].activities == currentActivity) {
+								
+								windowThumbs.append({
+									"windowId": clients[i].windowId,
+									"gridId": windowThumbs.count,
+									"client": clients[i]
+								});
+							
+							};
+							
+						}
 						
 					}
 					
+					// recalculate thumb size
+					windowsView.recalculateCellSize();
 				}
-				
-				// recalculate thumb size
-				windowsView.recalculateCellSize();
 				
 			})
 			
