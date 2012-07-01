@@ -21,7 +21,7 @@ Item {
 		if(!sources) sources = appsSource.data[appSearchQuery]["entries"];
 		entry = appsSource.data[sources[i]];
 		
-		if (sources[i] != "---") {
+		if (sources[i] != "---" && entry && entry["name"]) {
 			
 			if (Apps.appNames.indexOf(entry["name"]) < 0 && entry["name"] != ".hidden") {
 				
