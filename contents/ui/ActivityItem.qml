@@ -72,6 +72,8 @@ Component {
 						operation.Name = activityTitleField.text;
 						
 						activitiesSource.serviceForSource(DataEngineSource).startOperationCall(operation);
+						
+						activitiesModel.setProperty(index, "Name", activityTitleField.text);
 					} else {
 						activityLabel.state = 'edit';
 					}
