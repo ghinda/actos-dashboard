@@ -1,5 +1,5 @@
-arctos-dashboard
+actos-dashboard
 ================
 
-Dashboard controlling windows, apps, activities and search, part of Arctos.
+Dashboard controlling windows, apps, activities and search, part of Actos.
 
