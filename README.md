@@ -7,7 +7,7 @@ It is inspired by Gnome Shell's Activities view.
 
 ## Installation
 
-	plasmapkg --type kwinscript -i .
+  plasmapkg --type kwinscript -i .
 
 ## Activation
 
