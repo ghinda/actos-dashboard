@@ -4,8 +4,9 @@ import org.kde.plasma.core 2.0 as PlasmaCore;
 import org.kde.plasma.components 2.0 as Plasma;
 import org.kde.kquickcontrolsaddons 2.0 as KQuickControlsAddons;
 import org.kde.kwin 2.0;
+import org.kde.qtextracomponents 2.0 as QtExtra;
+
 import org.kde.plasma.graphicswidgets 0.1 as PlasmaWidgets;
-import org.kde.qtextracomponents 0.1 as QtExtra;
 
 Item {
 	id: dashboard
