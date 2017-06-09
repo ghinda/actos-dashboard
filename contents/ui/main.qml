@@ -1,8 +1,8 @@
-import QtQuick 1.1
-import org.kde.plasma.core 0.1 as PlasmaCore
-import org.kde.plasma.components 0.1 as Plasma
-import org.kde.plasma.graphicswidgets 0.1 as PlasmaWidgets
-import org.kde.qtextracomponents 0.1 as QtExtra
+import QtQuick 2.0
+import org.kde.kwin 2.0
+import org.kde.plasma.core 2.0 as PlasmaCore
+import org.kde.plasma.components 2.0 as Plasma
+// import org.kde.plasma.graphicswidgets 2.0 as PlasmaWidgets
 
 Item {
 	id: dashboard
@@ -48,7 +48,7 @@ Item {
 					}
 
 					PropertyChanges {
-						target: views.children[index]
+// 						target: views.children[index]
 						opacity: 1
 					}
 				},
@@ -132,44 +132,44 @@ Item {
 		focus: true
 		anchors.rightMargin: 20
 
-		PlasmaWidgets.LineEdit {
-			id: searchField
-			text: ""
-			width: 190
-			z: 9
-			anchors {
-				top: parent.top
-				topMargin: 20
-				right: parent.right
-				rightMargin: 20
-			}
-
-			onTextChanged: {
-
-				if(text.length >= mininumStringLength) {
-
-					// set search query
-					searchQuery = text.toLowerCase();
-
-					// activate search view
-					dashboardCategories.currentIndex = 3;
-
-					// search - activities
-					searchView.search();
-
-				} else {
-
-					// activate windows
-					dashboardCategories.currentIndex = previousIndex;
-
-					// hide search button
-					dashboardCategories.contentItem.children[4].state = "hide";
-
-				};
-
-			}
-
-		}
+// 		PlasmaWidgets.LineEdit {
+// 			id: searchField
+// 			text: ""
+// 			width: 190
+// 			z: 9
+// 			anchors {
+// 				top: parent.top
+// 				topMargin: 20
+// 				right: parent.right
+// 				rightMargin: 20
+// 			}
+//
+// 			onTextChanged: {
+//
+// 				if(text.length >= mininumStringLength) {
+//
+// 					// set search query
+// 					searchQuery = text.toLowerCase();
+//
+// 					// activate search view
+// 					dashboardCategories.currentIndex = 3;
+//
+// 					// search - activities
+// 					searchView.search();
+//
+// 				} else {
+//
+// 					// activate windows
+// 					dashboardCategories.currentIndex = previousIndex;
+//
+// 					// hide search button
+// 					dashboardCategories.contentItem.children[4].state = "hide";
+//
+// 				};
+//
+// 			}
+//
+// 		}
 
 		Keys.onPressed: {
 			if(event.key == Qt.Key_Backspace) {
@@ -234,7 +234,8 @@ Item {
 			id: views
 
 			anchors {
-				top: searchField.bottom
+// 				top: searchField.bottom
+				top: dashboardCategoriesContainer.top
 				topMargin: 50
 				left: dashboardCategoriesContainer.right
 				leftMargin: 50
@@ -243,67 +244,67 @@ Item {
 				bottom: parent.bottom
 			}
 
-			WindowSwitcher {
-				id: windowsView
-				opacity: 0
-				visible: (windowsView.opacity) ? true : false
+// 			WindowSwitcher {
+// 				id: windowsView
+// 				opacity: 0
+// 				visible: (windowsView.opacity) ? true : false
+//
+// 				states: State {
+// 					name: 'show'
+// 					PropertyChanges {
+// 						target: windowsView
+// 						opacity: 1
+// 					}
+// 				}
+//
+// 				transitions: Transition {
+// 					PropertyAnimation { property: "opacity"; duration: 100 }
+// 				}
+//
+// 			}
+//
+// 			Applications {
+// 				id: applicationsView
+// 				opacity: 0
+//
+// 				states: State {
+// 					name: 'show'
+// 					PropertyChanges {
+// 						target: applicationsView
+// 						opacity: 1
+// 					}
+// 				}
+//
+// 				transitions: Transition {
+// 					PropertyAnimation { property: "opacity"; duration: 100 }
+// 				}
+// 			}
+//
+// 			Activities {
+// 				id: activitiesView
+// 				opacity: 0
+//
+// 				states: State {
+// 					name: 'show'
+// 					PropertyChanges {
+// 						target: activitiesView
+// 						opacity: 1
+// 					}
+// 				}
+//
+// 				transitions: Transition {
+// 					PropertyAnimation { property: "opacity"; duration: 100 }
+// 				}
+// 			}
 
-				states: State {
-					name: 'show'
-					PropertyChanges {
-						target: windowsView
-						opacity: 1
-					}
-				}
-
-				transitions: Transition {
-					PropertyAnimation { property: "opacity"; duration: 100 }
-				}
-
-			}
-
-			Applications {
-				id: applicationsView
-				opacity: 0
-
-				states: State {
-					name: 'show'
-					PropertyChanges {
-						target: applicationsView
-						opacity: 1
-					}
-				}
-
-				transitions: Transition {
-					PropertyAnimation { property: "opacity"; duration: 100 }
-				}
-			}
-
-			Activities {
-				id: activitiesView
-				opacity: 0
-
-				states: State {
-					name: 'show'
-					PropertyChanges {
-						target: activitiesView
-						opacity: 1
-					}
-				}
-
-				transitions: Transition {
-					PropertyAnimation { property: "opacity"; duration: 100 }
-				}
-			}
-
-			Search {
-				id: searchView
-				opacity: 0
-
-				transitions: Transition {
-					PropertyAnimation { property: "opacity"; duration: 100 }
-				}
-			}
+// 			Search {
+// 				id: searchView
+// 				opacity: 0
+//
+// 				transitions: Transition {
+// 					PropertyAnimation { property: "opacity"; duration: 100 }
+// 				}
+// 			}
 		}
 	}
 
@@ -311,73 +312,50 @@ Item {
 	PlasmaCore.Dialog {
         id: dashboardContent
         x: 0
-        windowFlags: Qt.Popup
+//         windowFlags: Qt.Popup
         visible: false
 
         mainItem: viewsContainer
 	}
 
 	// dashboard button
-// 	PlasmaCore.Dialog {
-//         id: dashboardButton
-//         x: 0
-//         y: 0
+	PlasmaCore.Dialog {
+        id: dashboardButton
+        x: 0
+        y: 0
 //         windowFlags: Qt.X11BypassWindowManagerHint
-//
-//         mainItem: dashboardButttonContainer
-// 	}
 
-// 	Item {
-// 		id: dashboardButttonContainer
-// 		width: 28
-// 		height: 20
-//
-// 		Plasma.ToolButton {
-// 			anchors.fill: parent
-//
-// 			onClicked: toggleBoth()
-//
-// 			Image {
-// 				id: dashboardIcon
-// 				width: 15
-// 				height: 15
-// 				source: "../images/dashboardIcon.png"
-//
-// 				anchors {
-// 					left: parent.left
-// 					leftMargin: 5
-// 				}
-//
-// 				opacity: (dashboardContent.visible) ? 1 : 0.5
-//
-// 				transitions: Transition {
-// 					PropertyAnimation { property: "opacity"; duration: 100 }
-// 				}
-// 			}
-// 		}
-// 	}
+        mainItem: dashboardButttonContainer
+	}
 
-    Timer {
-		id: removeCashew
-		repeat: false
-		interval: 200
-		triggeredOnStart: false
-		onTriggered: {
 
-// 			var cashewRemoveScript = '#!/bin/sh\n\
-// js=$(mktemp)\n\
-// cat > $js <<_EOF\n\
-// var activity = new Activity("desktop");\n\
-// activity.addWidget("py-cashew");\n\
-// _EOF\n\
-// qdbus org.kde.plasma-desktop /App local.PlasmaApp.loadScriptInInteractiveConsole "$js" > /dev/null\n\
-// xdotool search --name "Desktop Shell Scripting Console – Plasma Desktop Shell" windowactivate key ctrl+e key ctrl+w\n\
-// rm -f "$js"\n\
-// #' + new Date().getTime();
-//
-// 			// remove the cashew
-// 			executableSource.connectSource(cashewRemoveScript);
+	Item {
+		id: dashboardButttonContainer
+		width: 28
+		height: 20
 
+		Plasma.ToolButton {
+			anchors.fill: parent
+
+			onClicked: toggleBoth()
+
+			Image {
+				id: dashboardIcon
+				width: 15
+				height: 15
+				source: "../images/dashboardIcon.png"
+
+				anchors {
+					left: parent.left
+					leftMargin: 5
+				}
+
+				opacity: (dashboardContent.visible) ? 1 : 0.5
+
+				transitions: Transition {
+					PropertyAnimation { property: "opacity"; duration: 100 }
+				}
+			}
 		}
 	}
 
@@ -428,74 +406,74 @@ Item {
 		}
 
 		Component.onCompleted: {
-			stateSource = sources[sources.length - 1];
-			connectedSources = sources;
-
-			runningActivities = activitiesSource.data[stateSource].Running.length;
-
-			for(var i=0; i < sources.length; i++) {
-				var sourceData = activitiesSource.data[sources[i]];
-				sourceData.DataEngineSource = sources[i];
-
-				activitiesModel.append(sourceData);
-			}
-
-			// connect signal after connecting sources
-			activitiesSource.dataChanged.connect(function() {
-
-				runningActivities = activitiesSource.data[stateSource].Running.length;
-
-				// get new wallpapers
-				for(var i=0; i < activitiesModel.count; i++) {
-
-					for(var j=0; j < activitiesSource.connectedSources.length; j++) {
-
-						if(activitiesModel.get(i).DataEngineSource == activitiesSource.connectedSources[j]) {
-
-							activitiesModel.get(i).Icon = activitiesSource.data[activitiesSource.connectedSources[j]].Icon;
-
-						}
-
-					}
-
-				}
-
-				if(currentActivity != activitiesSource.data[stateSource].Current) {
-					currentActivity = activitiesSource.data[stateSource].Current;
-
-					// get new windows for activity
-
-					// when changed activity, get new windows
-					windowThumbs.clear();
-
-					// add new clients to model
-					var clients = workspace.clientList();
-
-					var i = 0;
-					for (i = 0; i < clients.length; i++) {
-
-						if(visibleClient(clients[i])) {
-
-							// match activity
-							if(clients[i].activities == "" || clients[i].activities == currentActivity) {
-
-								windowThumbs.append({
-									"windowId": clients[i].windowId,
-									"gridId": windowThumbs.count,
-									"client": clients[i]
-								});
-
-							};
-
-						}
-
-					}
-
-					// recalculate thumb size
-					windowsView.recalculateCellSize();
-				}
-
-			})
+// 			stateSource = sources[sources.length - 1];
+// 			connectedSources = sources;
+//
+// 			runningActivities = activitiesSource.data[stateSource].Running.length;
+//
+// 			for(var i=0; i < sources.length; i++) {
+// 				var sourceData = activitiesSource.data[sources[i]];
+// 				sourceData.DataEngineSource = sources[i];
+//
+// 				activitiesModel.append(sourceData);
+// 			}
+//
+// 			// connect signal after connecting sources
+// 			activitiesSource.dataChanged.connect(function() {
+//
+// 				runningActivities = activitiesSource.data[stateSource].Running.length;
+//
+// 				// get new wallpapers
+// 				for(var i=0; i < activitiesModel.count; i++) {
+//
+// 					for(var j=0; j < activitiesSource.connectedSources.length; j++) {
+//
+// 						if(activitiesModel.get(i).DataEngineSource == activitiesSource.connectedSources[j]) {
+//
+// 							activitiesModel.get(i).Icon = activitiesSource.data[activitiesSource.connectedSources[j]].Icon;
+//
+// 						}
+//
+// 					}
+//
+// 				}
+//
+// 				if(currentActivity != activitiesSource.data[stateSource].Current) {
+// 					currentActivity = activitiesSource.data[stateSource].Current;
+//
+// 					// get new windows for activity
+//
+// 					// when changed activity, get new windows
+// 					windowThumbs.clear();
+//
+// 					// add new clients to model
+// 					var clients = workspace.clientList();
+//
+// 					var i = 0;
+// 					for (i = 0; i < clients.length; i++) {
+//
+// 						if(visibleClient(clients[i])) {
+//
+// 							// match activity
+// 							if(clients[i].activities == "" || clients[i].activities == currentActivity) {
+//
+// 								windowThumbs.append({
+// 									"windowId": clients[i].windowId,
+// 									"gridId": windowThumbs.count,
+// 									"client": clients[i]
+// 								});
+//
+// 							};
+//
+// 						}
+//
+// 					}
+//
+// 					// recalculate thumb size
+// 					windowsView.recalculateCellSize();
+// 				}
+//
+// 			})
 
 		}
 	}
@@ -532,7 +510,7 @@ Item {
 		} else {
 
 			// clear search field
-			searchField.text = "";
+// 			searchField.text = "";
 			// show content
 			dashboardContent.visible = true;
 
@@ -558,7 +536,7 @@ Item {
 	}
 
 	// check if the client/window should be visible in the windowSwitcher
-    function visibleClient(client) {
+	function visibleClient(client) {
 		if(client.dock || client.skipSwitcher || client.skipTaskbar || !client.normalWindow) {
 			return false;
 		} else {
@@ -567,10 +545,11 @@ Item {
 	}
 
 	Component.onCompleted: {
+		console.log('actos-dashboard-on-completed')
 
 		var screen = workspace.clientArea(KWin.MaximizedArea, workspace.activeScreen, workspace.currentDesktop);
-        screenWidth = screen.width;
-        screenHeight = screen.height;
+		screenWidth = screen.width;
+		screenHeight = screen.height;
 
 		dashHeight = screenHeight - dockHeight;
 
@@ -578,17 +557,16 @@ Item {
 		dashboardContent.x = 0;
 		dashboardContent.visible = false;
 
-		//dashboardButton.visible = true;
+		dashboardButton.visible = true;
 
-		// register top-left screen edge
-		registerScreenEdge(KWin.ElectricTopLeft, function() {
-			toggleBoth();
-		});
+		// TODO removed from api?
+// 		registerScreenEdge(KWin.ElectricTopLeft, function() {
+// 			toggleBoth();
+// 		});
 
-		// register dashboard shortcut
-		registerShortcut("Activate Actos Dashboard", "", "Meta+A", function() {
-			toggleBoth();
-		});
-    }
-
+		// TODO removed from api?
+// 		registerShortcut("Activate Actos Dashboard", "", "Meta+A", function() {
+// 			toggleBoth();
+// 		});
+	}
 }

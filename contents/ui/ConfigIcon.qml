@@ -1,5 +1,4 @@
-import QtQuick 1.1
-import org.kde.plasma.core 0.1
+import QtQuick 2.0
 
 Item {
 	property int size : parent.height

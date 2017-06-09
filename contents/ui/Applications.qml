@@ -1,7 +1,7 @@
-import QtQuick 1.1
-import org.kde.plasma.core 0.1 as PlasmaCore
-import org.kde.plasma.components 0.1 as Plasma
-import org.kde.plasma.graphicswidgets 0.1 as PlasmaWidgets
+import QtQuick 2.0
+import org.kde.plasma.core 2.0 as PlasmaCore
+import org.kde.plasma.components 2.0 as Plasma
+// import org.kde.plasma.graphicswidgets 2.0 as PlasmaWidgets
 
 import "../code/apps.js" as Apps
 
@@ -165,23 +165,23 @@ Item {
 			width: 128
 			height: 128
 			
-			PlasmaWidgets.IconWidget {
-				text: modelData.name
-				icon: QIcon(modelData.iconName)
-				preferredIconSize: "48x48"
-				minimumIconSize: "48x48"
-				drawBackground: true
-				
-				anchors.fill: parent
-				
-				onClicked: {
-					var operation = appsSource.serviceForSource(modelData.menuId).operationDescription("launch");
-					appsSource.serviceForSource(modelData.menuId).startOperationCall(operation);
-					
-					// hide dashboard
-					toggleLauncher();
-				}
-			}
+// 			PlasmaWidgets.IconWidget {
+// 				text: modelData.name
+// 				icon: QIcon(modelData.iconName)
+// 				preferredIconSize: "48x48"
+// 				minimumIconSize: "48x48"
+// 				drawBackground: true
+//
+// 				anchors.fill: parent
+//
+// 				onClicked: {
+// 					var operation = appsSource.serviceForSource(modelData.menuId).operationDescription("launch");
+// 					appsSource.serviceForSource(modelData.menuId).startOperationCall(operation);
+//
+// 					// hide dashboard
+// 					toggleLauncher();
+// 				}
+// 			}
 		}
 	}
 	
